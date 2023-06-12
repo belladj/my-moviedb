@@ -8,6 +8,7 @@ using System.Linq;
 using MyMovieDb.Contracts.Repositories;
 using MyMovieDb.Extensions;
 using MyMovieDb.Models;
+using Xamarin.Forms;
 
 namespace MyMovieDb.ViewModels
 {
@@ -23,6 +24,7 @@ namespace MyMovieDb.ViewModels
             _movieRepo = movieRepo;
             Title = "Genres";
             LoadGenresCommand.Execute();
+            SelectGenreCommand = new DelegateCommand<Genre>(LoadGenreMovies);
         }
 
         private ObservableCollection<Genre> _genres;
@@ -32,6 +34,7 @@ namespace MyMovieDb.ViewModels
             set { SetProperty(ref _genres, value); }
         }
 
+        // get genres
         private DelegateCommand _loadGenresCommand;
         public DelegateCommand LoadGenresCommand => _loadGenresCommand ?? (_loadGenresCommand = new DelegateCommand(LoadGenres));
 
@@ -43,6 +46,16 @@ namespace MyMovieDb.ViewModels
             IsBusy = false;
         }
 
+        // get movies by genre
+        public DelegateCommand<Genre> SelectGenreCommand { get; private set; }
 
+        private async void LoadGenreMovies(Genre genre)
+        {
+            var navigationParams = new NavigationParameters
+                {
+                    {"genre", genre }
+                };
+            await _navigationService.NavigateAsync("MovieListPage", navigationParams);
+        }
     }
 }

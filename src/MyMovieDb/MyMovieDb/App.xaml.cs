@@ -44,6 +44,8 @@ namespace MyMovieDb
 
             containerRegistry.Register<IMovieService, MovieService>();
             containerRegistry.Register<IMovieRepository, MovieRepository>();
+            containerRegistry.RegisterForNavigation<MovieListPage, MovieListPageViewModel>();
+            containerRegistry.RegisterForNavigation<MoviePage, MoviePageViewModel>();
         }
 
         private void InitAutoMapper()

@@ -9,7 +9,7 @@ namespace MyMovieDb.Repositories
 {
 	public class MovieRepository : IMovieRepository
 	{
-		TMDbClient _client = new TMDbClient("---YOUR-API-KEY---");
+		TMDbClient _client = new TMDbClient("2e4b42db41639f614d7c69a0e5ff2473");
 
 		public async Task<List<Genre>> GetGenres()
 		{
@@ -17,5 +17,19 @@ namespace MyMovieDb.Repositories
 			var result = Mapper.Map<List<TMDbLib.Objects.General.Genre>, List<Models.Genre>>(genres);
 			return result;
 		}
+
+		public async Task<List<TMDbLib.Objects.Search.SearchMovie>> GetMoviesByGenre(int id)
+        {
+			var movies = await _client.GetGenreMoviesAsync(id);
+			var result = movies.Results;
+			return result;
+        }
+
+		public async Task<TMDbLib.Objects.Movies.Movie> GetMovie(int id)
+        {
+			var movie = await _client.GetMovieAsync(id);
+			return movie;
+        }
+
 	}
 }

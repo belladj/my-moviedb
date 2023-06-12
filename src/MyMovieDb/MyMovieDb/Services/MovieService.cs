@@ -18,5 +18,14 @@ namespace MyMovieDb.Services
 		{
 			return await _movieRepo.GetGenres();
 		}
+		public async Task<List<TMDbLib.Objects.Search.SearchMovie>> GetMoviesByGenre(int id)
+		{
+			return await _movieRepo.GetMoviesByGenre(id);
+		}
+
+		public async Task<TMDbLib.Objects.Movies.Movie> GetMovie(int id)
+		{
+			return await _movieRepo.GetMovie(id);
+		}
 	}
 }

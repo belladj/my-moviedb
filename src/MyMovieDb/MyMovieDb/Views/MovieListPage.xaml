@@ -4,24 +4,23 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" 
              xmlns:prism1="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="MyMovieDb.Views.GenrePage"
+             x:Class="MyMovieDb.Views.MovieListPage"
              Title="{Binding Title}">
-
-    <ListView ItemsSource="{Binding Genres}" 
+    
+    <ListView ItemsSource="{Binding GenreMovies}" 
               IsRefreshing="{Binding IsBusy}">
 
         <ListView.ItemTemplate>
             <DataTemplate>
-                <TextCell Text="{Binding Name}"/>
+                <TextCell Text="{Binding OriginalTitle}"/>
             </DataTemplate>
         </ListView.ItemTemplate>
 
         <ListView.Behaviors>
             <prism1:EventToCommandBehavior EventName="ItemTapped" 
-                                      Command="{Binding SelectGenreCommand}"
+                                      Command="{Binding SelectMovieCommand}"
                                       EventArgsParameterPath="Item" />
         </ListView.Behaviors>
 
     </ListView>
-
 </ContentPage>
