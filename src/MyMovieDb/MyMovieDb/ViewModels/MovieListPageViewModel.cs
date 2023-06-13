@@ -10,13 +10,17 @@ using MyMovieDb.Extensions;
 using MyMovieDb.Models;
 using System.Windows.Input;
 using Xamarin.Forms;
+using System.Runtime.CompilerServices;
+using System.ComponentModel;
 
 namespace MyMovieDb.ViewModels
 {
-    public class MovieListPageViewModel : ViewModelBase
+    public class MovieListPageViewModel : ViewModelBase, INotifyPropertyChanged
     {
         private readonly INavigationService _navigationService;
         private readonly IMovieRepository _movieRepo;
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public MovieListPageViewModel(INavigationService navigationService, IMovieRepository movieRepo)
             : base(navigationService)
         {
@@ -25,6 +29,19 @@ namespace MyMovieDb.ViewModels
             Title = Genre.Name;
             LoadGenreMoviesCommand.Execute();
             SelectMovieCommand = new DelegateCommand<TMDbLib.Objects.Search.SearchMovie>(LoadMovieDetails);
+
+            // add endless scroll
+            OnPropertyChanged("GenreMovies");
+            int page = 2;
+            this.LoadMore = new Command(async () => {
+                var moreList = await _movieRepo.GetMoviesByGenre(Genre.Id, 2);
+                page += 1;
+                foreach (var item in moreList)
+                {
+                    GenreMovies.Add(item);
+                    OnPropertyChanged("GenreMovies");
+                }
+            });
         }
 
         private Genre _genre;
@@ -40,6 +57,8 @@ namespace MyMovieDb.ViewModels
             set { SetProperty(ref _genremovies, value); }
         }
 
+        public ICommand LoadMore {get; set; }
+
         // get data upon navigation
         public override void OnNavigatedTo(NavigationParameters parameters)
         {
@@ -53,7 +72,15 @@ namespace MyMovieDb.ViewModels
         async void LoadMoviesByGenre()
         {
             IsBusy = true;
-            var movieList = await _movieRepo.GetMoviesByGenre(Genre.Id);
+            var movieList = await _movieRepo.GetMoviesByGenre(Genre.Id,1);
+            GenreMovies = movieList.ToObservableCollection();
+            IsBusy = false;
+        }
+
+        async void LoadMoreMovies()
+        {
+            IsBusy = true;
+            var movieList = await _movieRepo.GetMoviesByGenre(Genre.Id, 1);
             GenreMovies = movieList.ToObservableCollection();
             IsBusy = false;
         }
@@ -68,6 +95,16 @@ namespace MyMovieDb.ViewModels
                 };
             await _navigationService.NavigateAsync("MoviePage", navigationParams);
          }
+
+
+        void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
 
     }
 }

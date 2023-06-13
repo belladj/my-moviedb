@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using MyMovieDb.Contracts.Repositories;
@@ -18,10 +19,10 @@ namespace MyMovieDb.Repositories
 			return result;
 		}
 
-		public async Task<List<TMDbLib.Objects.Search.SearchMovie>> GetMoviesByGenre(int id)
+		public async Task<List<TMDbLib.Objects.Search.SearchMovie>> GetMoviesByGenre(int id, int page)
         {
 			var movies = await _client.GetGenreMoviesAsync(id);
-			var result = movies.Results;
+			var result = movies.Results.Take(10).Skip(page - 1).ToList();
 			return result;
         }
 

@@ -7,7 +7,7 @@ namespace MyMovieDb.Contracts.Services
 	public interface IMovieService
 	{
 		Task<List<Genre>> GetGenres();
-		Task<List<TMDbLib.Objects.Search.SearchMovie>> GetMoviesByGenre(int id);
+		Task<List<TMDbLib.Objects.Search.SearchMovie>> GetMoviesByGenre(int id, int page);
 		Task<TMDbLib.Objects.Movies.Movie> GetMovie(int id);
 	}
 }

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" 
              xmlns:prism1="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             xmlns:b="clr-namespace:MyMovieDb.Behaviors"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MyMovieDb.Views.MovieListPage"
              Title="{Binding Title}">
@@ -12,7 +13,30 @@
 
         <ListView.ItemTemplate>
             <DataTemplate>
-                <TextCell Text="{Binding OriginalTitle}"/>
+                <ViewCell>
+                    <Grid Padding="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.RowSpan="2"
+                       Source="{Binding PosterPath}"
+                       Aspect="AspectFill"
+                       HeightRequest="60"
+                       WidthRequest="60" />
+                        <Label Grid.Column="1"
+                       Text="{Binding OriginalTitle}"
+                       FontAttributes="Bold" />
+                        <Label Grid.Row="1"
+                       Grid.Column="1"
+                       Text="{Binding ReleaseDate}"
+                       VerticalOptions="End" />
+                    </Grid>
+                </ViewCell>
             </DataTemplate>
         </ListView.ItemTemplate>
 
@@ -20,6 +44,7 @@
             <prism1:EventToCommandBehavior EventName="ItemTapped" 
                                       Command="{Binding SelectMovieCommand}"
                                       EventArgsParameterPath="Item" />
+            <b:InfiniteScrolling LoadMoreCommand="{Binding LoadMore}" />
         </ListView.Behaviors>
 
     </ListView>
