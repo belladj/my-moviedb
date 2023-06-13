@@ -4,6 +4,8 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" 
              xmlns:prism1="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              xmlns:b="clr-namespace:MyMovieDb.Behaviors"
+             xmlns:viewmodels="clr-namespace:MyMovieDb.ViewModels"
+             x:DataType="viewmodels:MovieListPageViewModel"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MyMovieDb.Views.MovieListPage"
              Title="{Binding Title}">

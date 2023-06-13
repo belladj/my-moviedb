@@ -1,9 +1,87 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:b="clr-namespace:MyMovieDb.Behaviors"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" 
+             xmlns:viewmodels="clr-namespace:MyMovieDb.ViewModels"
+             x:DataType="viewmodels:MoviePageViewModel"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MyMovieDb.Views.MoviePage"
              Title="{Binding Title}">
-  
+
+    <ListView>
+        <ListView.Header>
+            <StackLayout Orientation="Horizontal">
+                <Label Text= "{Binding Movie.OriginalTitle}"
+                       FontAttributes="Bold"/>
+                <Label Text= "{Binding Movie.ReleaseDate}"/>
+                <Label Text= "{Binding Movie.Overview}"/>
+            </StackLayout>
+        </ListView.Header>
+        
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <ViewCell>
+                    <Grid Padding="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <Label Grid.Row="1"
+                       Grid.Column="1"
+                       Text="Videos"
+                       FontAttributes="Bold"
+                       VerticalOptions="End" />
+
+                        <ListView
+                        ItemsSource="{Binding VideoLinks, Mode=OneWay}"
+                        SeparatorVisibility="None"
+                        RowHeight="200" />
+
+                    </Grid>
+                </ViewCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+        <ListView.Behaviors>
+            <b:InfiniteScrolling LoadMoreCommand="{Binding LoadMore}" />
+        </ListView.Behaviors>
+        
+        <ListView.Footer>
+            <ListView ItemsSource="{Binding Reviews}" 
+              IsRefreshing="{Binding IsBusy}">
+                <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid Padding="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="1"
+                       Text="{Binding Author}"
+                       FontAttributes="Bold" />
+                            <Label Grid.Row="1"
+                       Grid.Column="1"
+                       Text="{Binding Content}"
+                       VerticalOptions="End" />
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.Behaviors>
+                <b:InfiniteScrolling LoadMoreCommand="{Binding LoadMore}" />
+            </ListView.Behaviors>
+            </ListView>
+        </ListView.Footer>
+        
+    </ListView>
 </ContentPage>

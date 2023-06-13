@@ -33,7 +33,7 @@ namespace MyMovieDb.ViewModels
             // add endless scroll
             OnPropertyChanged("GenreMovies");
             int page = 2;
-            this.LoadMore = new Command(async () => {
+            LoadMore = new Command(async () => {
                 var moreList = await _movieRepo.GetMoviesByGenre(Genre.Id, 2);
                 page += 1;
                 foreach (var item in moreList)
@@ -73,14 +73,6 @@ namespace MyMovieDb.ViewModels
         {
             IsBusy = true;
             var movieList = await _movieRepo.GetMoviesByGenre(Genre.Id,1);
-            GenreMovies = movieList.ToObservableCollection();
-            IsBusy = false;
-        }
-
-        async void LoadMoreMovies()
-        {
-            IsBusy = true;
-            var movieList = await _movieRepo.GetMoviesByGenre(Genre.Id, 1);
             GenreMovies = movieList.ToObservableCollection();
             IsBusy = false;
         }
